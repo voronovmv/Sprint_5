@@ -1,11 +1,14 @@
 from locators import RegisterPageLocators, LoginPageLocators, MainPageLocators
-from tests.helpers import (
+from helpers import (
     generate_email,
     generate_password,
-    wait_visible,
-    wait_url_contains,
-    safe_click
+    safe_click,
+    is_url_contains,
+    is_visible
 )
+
+
+TEST_USER_NAME = "Тест"
 
 
 def register_user(driver, base_url):
@@ -14,26 +17,22 @@ def register_user(driver, base_url):
     email = generate_email()
     password = generate_password()
 
-    driver.find_element(*RegisterPageLocators.NAME_INPUT).send_keys("Тест")
+    driver.find_element(*RegisterPageLocators.NAME_INPUT).send_keys(TEST_USER_NAME)
     driver.find_element(*RegisterPageLocators.EMAIL_INPUT).send_keys(email)
     driver.find_element(*RegisterPageLocators.PASSWORD_INPUT).send_keys(password)
 
     safe_click(driver, RegisterPageLocators.REGISTER_BUTTON)
 
-    # После регистрации ожидаем страницу логина
-    wait_url_contains(driver, "/login")
-
+    assert is_url_contains(driver, "/login"), "После регистрации не открылась страница логина"
     return email, password
 
 
 def login_user(driver, email, password):
-    # Мы должны быть на странице логина
-    wait_visible(driver, LoginPageLocators.EMAIL_INPUT, 10)
+    assert is_visible(driver, LoginPageLocators.EMAIL_INPUT), "Не видно поле Email на странице логина"
 
     driver.find_element(*LoginPageLocators.EMAIL_INPUT).send_keys(email)
     driver.find_element(*LoginPageLocators.PASSWORD_INPUT).send_keys(password)
 
     safe_click(driver, LoginPageLocators.LOGIN_BUTTON)
 
-    # После логина ждём кнопку "Оформить заказ" на главной
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "После логина не появилась кнопка Оформить заказ"

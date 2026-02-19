@@ -1,59 +1,54 @@
 from locators import MainPageLocators, AccountPageLocators
-from tests.helpers import safe_click, wait_url_contains, wait_visible
-from tests.test_utils_auth import register_user, login_user
+from helpers import safe_click, is_url_contains, is_visible
+from utils_auth import register_user, login_user
+from conftest import BASE_URL
 
 
-def test_go_to_account_from_main(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_go_to_account_from_main(driver):
+    email, password = register_user(driver, BASE_URL)
 
     # Мы уже на /login
     login_user(driver, email, password)
 
-    # Переход через кнопку в шапке
     safe_click(driver, MainPageLocators.ACCOUNT_LINK)
 
-    wait_url_contains(driver, "/account/profile")
-    wait_visible(driver, AccountPageLocators.LOGOUT_BUTTON, 10)
-
-    assert "/account/profile" in driver.current_url
+    assert is_url_contains(driver, "/account/profile"), "Не перешли в профиль"
+    assert is_visible(driver, AccountPageLocators.LOGOUT_BUTTON), "Не видно кнопку Выход в профиле"
 
 
-def test_go_from_account_to_constructor_by_constructor_link(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_go_from_account_to_constructor_by_constructor_link(driver):
+    email, password = register_user(driver, BASE_URL)
     login_user(driver, email, password)
 
-    # Переход в ЛК через UI
     safe_click(driver, MainPageLocators.ACCOUNT_LINK)
-    wait_url_contains(driver, "/account/profile")
 
-    wait_visible(driver, AccountPageLocators.LOGOUT_BUTTON, 10)
+    assert is_url_contains(driver, "/account/profile"), "Не перешли в профиль"
+    assert is_visible(driver, AccountPageLocators.LOGOUT_BUTTON), "Не видно кнопку Выход в профиле"
 
     safe_click(driver, AccountPageLocators.CONSTRUCTOR_LINK)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Не вернулись в конструктор, кнопка Оформить заказ не видна"
 
 
-def test_go_from_account_to_constructor_by_logo(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_go_from_account_to_constructor_by_logo(driver):
+    email, password = register_user(driver, BASE_URL)
     login_user(driver, email, password)
 
-    # Переход в ЛК через UI
     safe_click(driver, MainPageLocators.ACCOUNT_LINK)
-    wait_url_contains(driver, "/account/profile")
+    assert is_url_contains(driver, "/account/profile"), "Не перешли в профиль"
 
     safe_click(driver, MainPageLocators.LOGO)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Не вернулись на главную по клику на логотип"
 
 
-def test_logout_from_account(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_logout_from_account(driver):
+    email, password = register_user(driver, BASE_URL)
     login_user(driver, email, password)
 
-    # Переход в ЛК через UI
     safe_click(driver, MainPageLocators.ACCOUNT_LINK)
-    wait_url_contains(driver, "/account/profile")
+    assert is_url_contains(driver, "/account/profile"), "Не перешли в профиль"
 
     safe_click(driver, AccountPageLocators.LOGOUT_BUTTON)
 
-    wait_url_contains(driver, "/login")
+    assert is_url_contains(driver, "/login"), "После выхода не открылась страница логина"

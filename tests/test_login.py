@@ -1,64 +1,60 @@
 from locators import (
     MainPageLocators,
-    LoginPageLocators,
     RegisterPageLocators,
     ForgotPasswordLocators
 )
-from tests.helpers import wait_visible, safe_click, wait_url_contains
-from tests.test_utils_auth import register_user, login_user
+from helpers import safe_click, is_url_contains, is_visible
+from utils_auth import register_user, login_user
+from conftest import BASE_URL
 
 
-def test_login_from_main_page_button(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_login_from_main_page_button(driver):
+    email, password = register_user(driver, BASE_URL)
 
-    driver.get(base_url)
+    driver.get(BASE_URL)
     safe_click(driver, MainPageLocators.LOGIN_BUTTON_MAIN)
 
-    wait_url_contains(driver, "/login")
+    assert is_url_contains(driver, "/login"), "Не открылась страница логина"
 
     login_user(driver, email, password)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
-    assert driver.find_element(*MainPageLocators.ORDER_BUTTON).is_displayed()
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Нет кнопки Оформить заказ после логина"
 
 
-def test_login_via_account_button(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_login_via_account_button(driver):
+    email, password = register_user(driver, BASE_URL)
 
-    driver.get(base_url)
+    driver.get(BASE_URL)
     safe_click(driver, MainPageLocators.ACCOUNT_LINK)
 
-    wait_url_contains(driver, "/login")
+    assert is_url_contains(driver, "/login"), "Не открылась страница логина"
 
     login_user(driver, email, password)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
-    assert driver.find_element(*MainPageLocators.ORDER_BUTTON).is_displayed()
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Нет кнопки Оформить заказ после логина"
 
 
-def test_login_from_register_form_link(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_login_from_register_form_link(driver):
+    email, password = register_user(driver, BASE_URL)
 
-    driver.get(f"{base_url}/register")
+    driver.get(f"{BASE_URL}/register")
     safe_click(driver, RegisterPageLocators.LOGIN_LINK)
 
-    wait_url_contains(driver, "/login")
+    assert is_url_contains(driver, "/login"), "Не открылась страница логина"
 
     login_user(driver, email, password)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
-    assert driver.find_element(*MainPageLocators.ORDER_BUTTON).is_displayed()
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Нет кнопки Оформить заказ после логина"
 
 
-def test_login_from_forgot_password_form_link(driver, base_url):
-    email, password = register_user(driver, base_url)
+def test_login_from_forgot_password_form_link(driver):
+    email, password = register_user(driver, BASE_URL)
 
-    driver.get(f"{base_url}/forgot-password")
+    driver.get(f"{BASE_URL}/forgot-password")
     safe_click(driver, ForgotPasswordLocators.LOGIN_LINK)
 
-    wait_url_contains(driver, "/login")
+    assert is_url_contains(driver, "/login"), "Не открылась страница логина"
 
     login_user(driver, email, password)
 
-    wait_visible(driver, MainPageLocators.ORDER_BUTTON, 10)
-    assert driver.find_element(*MainPageLocators.ORDER_BUTTON).is_displayed()
+    assert is_visible(driver, MainPageLocators.ORDER_BUTTON), "Нет кнопки Оформить заказ после логина"

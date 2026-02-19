@@ -15,7 +15,7 @@ class RegisterPageLocators:
     REGISTER_BUTTON = (By.XPATH, "//button[normalize-space()='Зарегистрироваться']")
 
     # Ссылка "Войти" под формой регистрации
-    LOGIN_LINK = (By.XPATH, "//a[contains(text(),'Войти')]")
+    LOGIN_LINK = (By.XPATH, "//a[@href='/login' and contains(text(),'Войти')]")
 
     # Текст ошибки под полем пароля (например, при коротком пароле)
     PASSWORD_ERROR = (By.XPATH, "//p[contains(@class,'input__error')]")
@@ -54,6 +54,24 @@ class MainPageLocators:
     # Вкладка "Начинки" в конструкторе
     TAB_FILLINGS = (By.XPATH, "//span[normalize-space()='Начинки']/parent::*")
 
+    # Активная вкладка "Булки" (для проверки активного класса)
+    TAB_BUNS_ACTIVE = (
+        By.XPATH,
+        "//div[contains(@class,'tab_tab_type_current')]//span[normalize-space()='Булки']"
+    )
+
+    # Активная вкладка "Соусы" (для проверки активного класса)
+    TAB_SAUCES_ACTIVE = (
+        By.XPATH,
+        "//div[contains(@class,'tab_tab_type_current')]//span[normalize-space()='Соусы']"
+    )
+
+    # Активная вкладка "Начинки" (для проверки активного класса)
+    TAB_FILLINGS_ACTIVE = (
+        By.XPATH,
+        "//div[contains(@class,'tab_tab_type_current')]//span[normalize-space()='Начинки']"
+    )
+
     # Заголовок секции "Булки"
     SECTION_BUNS = (By.XPATH, "//h2[normalize-space()='Булки']")
 
@@ -63,11 +81,10 @@ class MainPageLocators:
     # Заголовок секции "Начинки"
     SECTION_FILLINGS = (By.XPATH, "//h2[normalize-space()='Начинки']")
 
-    # Логотип Stellar Burgers (кликабельный, ведет на главную)
-    # Иногда это div с классом logo, иногда просто ссылка с svg внутри
+    # Логотип Stellar Burgers в шапке
     LOGO = (
         By.XPATH,
-        "(//div[contains(@class,'AppHeader_header__logo')]/a)[1] | //a[@href='/' and .//svg]"
+        "//div[contains(@class,'AppHeader_header__logo')]//a | //a[@href='/' and .//svg]"
     )
 
     # Кнопка "Оформить заказ" на главной
@@ -84,4 +101,4 @@ class AccountPageLocators:
 
 class ForgotPasswordLocators:
     # Ссылка "Войти" на странице восстановления пароля
-    LOGIN_LINK = (By.XPATH, "//a[contains(text(),'Войти')]")
+    LOGIN_LINK = (By.XPATH, "//a[@href='/login' and contains(text(),'Войти')]")
